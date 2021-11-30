@@ -1,15 +1,15 @@
 cask "vmware-horizon-client" do
-  version "2111-8.4.0-18968281,CART22FH2"
+  version "8.4.0,2111,18968281,CART22FH2"
   sha256 "7945647c675e62e9749f789eca4cd5c42866e67e68730312c526fb389d213732"
 
-  url "https://download3.vmware.com/software/view/viewclients/#{version.after_comma}/VMware-Horizon-Client-#{version.before_comma}.dmg"
+  url "https://download3.vmware.com/software/view/viewclients/#{version.csv.fourth}/VMware-Horizon-Client-#{version.csv.second}-#{version.csv.first}-#{version.csv.third}.dmg"
   name "VMware Horizon Client"
   desc "Virtual machine client"
   homepage "https://www.vmware.com/"
 
   livecheck do
     url "https://customerconnect.vmware.com/channel/public/api/v1.0/products/getRelatedDLGList?locale=en_US&category=desktop_end_user_computing&product=vmware_horizon_clients&version=horizon_8&dlgType=PRODUCT_BINARY"
-    regex(%r{/([^/]+)/VMware-Horizon-Client-v?(\d+(?:[.-]\d+)+)\.dmg}i)
+    regex(%r{/([^/]+)/VMware-Horizon-Client-(\d+(?:\.\d+)*)-(\d+(?:\.\d+)+)-(\d+)\.dmg}i)
     strategy :page_match do |page|
       mac_json_info = JSON.parse(page)["dlgEditionsLists"].select { |item| item["name"].match(/mac/i) }&.first
       api_item = mac_json_info["dlgList"]&.first
@@ -27,7 +27,7 @@ cask "vmware-horizon-client" do
       match = download_item[:content].match(regex)
       next if match.blank?
 
-      "#{match[2]},#{match[1]}"
+      "#{match[3]},#{match[2]},#{match[4]},#{match[1]}"
     end
   end
 
